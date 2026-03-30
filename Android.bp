@@ -1,0 +1,18 @@
+android_app {
+    name: "TrueBackup",
+    srcs: [
+        "src/**/*.java",
+    ],
+    resource_dirs: ["res"],
+    platform_apis: true,
+    certificate: "platform",
+    privileged: true,
+    optimize: {
+        enabled: false,
+    },
+    static_libs: [
+        "androidx.appcompat_appcompat",
+        "androidx.recyclerview_recyclerview",
+        "com.google.android.material_material",
+    ],
+}
