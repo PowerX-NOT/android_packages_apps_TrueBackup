@@ -66,8 +66,13 @@ public class MainActivity extends Activity {
 
     private void loadBackupPath() {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        mBackupPath = prefs.getString(KEY_BACKUP_PATH, "/sdcard/TrueBackup");
-        mPathText.setText("Backup Location: " + mBackupPath);
+        mBackupPath = prefs.getString(KEY_BACKUP_PATH, null);
+        if (mBackupPath == null || mBackupPath.trim().isEmpty()) {
+            mBackupPath = null;
+            mPathText.setText("Backup Location: Not set");
+        } else {
+            mPathText.setText("Backup Location: " + mBackupPath);
+        }
     }
 
     private void pickBackupDirectory() {
@@ -115,6 +120,11 @@ public class MainActivity extends Activity {
 
     private void startBackup() {
         if (mService == null) return;
+
+        if (mBackupPath == null || mBackupPath.trim().isEmpty()) {
+            Toast.makeText(this, "Please choose a backup location first", Toast.LENGTH_LONG).show();
+            return;
+        }
         
         for (AppInfo app : mApps) {
             if (app.selected) {

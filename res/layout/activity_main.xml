@@ -25,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Backup Location: /sdcard/TrueBackup"
+            android:text="Backup Location: Not set"
             android:textSize="14sp"
             android:textColor="#666666"/>
 
