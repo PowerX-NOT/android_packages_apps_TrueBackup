@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/truebackup_title">
+
+    <Preference
+        android:key="truebackup_backup_location"
+        android:title="@string/truebackup_backup_location_title"
+        android:summary="@string/truebackup_backup_location_summary" />
+
+    <Preference
+        android:key="truebackup_backup_apps"
+        android:title="@string/truebackup_backup_apps_title"
+        android:summary="@string/truebackup_backup_apps_summary" />
+
+    <Preference
+        android:key="truebackup_restore_apps"
+        android:title="@string/truebackup_restore_apps_title"
+        android:summary="@string/truebackup_restore_apps_summary" />
+
+</PreferenceScreen>

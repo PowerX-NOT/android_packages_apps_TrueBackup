@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="truebackup_title">TrueBackup</string>
+    <string name="truebackup_summary">Backup app APK and full data without root</string>
+    <string name="truebackup_backup_location_title">Backup location</string>
+    <string name="truebackup_backup_location_summary">Choose where backups are stored</string>
+    <string name="truebackup_backup_apps_title">Backup apps</string>
+    <string name="truebackup_backup_apps_summary">Select apps and start backup</string>
+    <string name="truebackup_restore_apps_title">Restore apps</string>
+    <string name="truebackup_restore_apps_summary">Restore from a previous backup</string>
+</resources>
