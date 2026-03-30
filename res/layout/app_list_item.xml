@@ -11,7 +11,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="16dp"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/ic_launcher"
         android:contentDescription="app icon"/>
 
     <LinearLayout
