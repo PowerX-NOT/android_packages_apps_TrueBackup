@@ -14,8 +14,9 @@ android_app {
     ],
     resource_dirs: ["res"],
     static_libs: [
-        "androidx.activity_activity-ktx",
-        "androidx.appcompat_appcompat",
+        "SettingsLibCollapsingToolbarBaseActivity",
+        "SettingsLibSettingsTheme",
+        "SettingsLibSelectorWithWidgetPreference",
         "androidx.core_core-ktx",
         "androidx.fragment_fragment-ktx",
         "androidx.lifecycle_lifecycle-runtime-ktx",

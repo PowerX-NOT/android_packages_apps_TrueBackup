@@ -16,7 +16,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.android.internal.logging.nano.MetricsProto
 import com.android.truebackup.R
-import androidx.appcompat.app.AlertDialog
+import android.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceScreen
 import com.android.settings.core.SubSettingLauncher
@@ -385,11 +385,7 @@ class TrueBackupRestoreAppListFragment : DashboardFragment() {
                             label = e.substring(sep + 1)
                         }
                         if (pkg.isEmpty()) continue
-                        val icon: Drawable = try {
-                            pm.getApplicationIcon(pkg)
-                        } catch (_: PackageManager.NameNotFoundException) {
-                            ctx.getDrawable(android.R.drawable.sym_def_app_icon)!!
-                        }
+                        val icon: Drawable = TrueBackupPaths.loadPackageIcon(ctx, pm, pkg)
                         val name = if (label.isNotEmpty()) label else pkg
                         val backupDir = resolveBackupPackageDir(ctx, backupPath, pkg)
                         fromService.add(
@@ -445,11 +441,7 @@ class TrueBackupRestoreAppListFragment : DashboardFragment() {
         } catch (e: Exception) {
             Log.w(LOG_TAG, "parse ${pkgDir.name}", e)
         }
-        val icon: Drawable = try {
-            pm.getApplicationIcon(pkg)
-        } catch (_: PackageManager.NameNotFoundException) {
-            ctx.getDrawable(android.R.drawable.sym_def_app_icon)!!
-        }
+        val icon: Drawable = TrueBackupPaths.loadPackageIcon(ctx, pm, pkg)
         val resolvedDir = resolveBackupPackageDir(ctx, backupPath, pkg) ?: pkgDir
         return RestoreRow(
             pkg,
@@ -521,6 +513,9 @@ class TrueBackupRestoreAppListFragment : DashboardFragment() {
                     )
                     .launch()
             }
+            setExtraWidgetContentDescription(
+                context.getString(R.string.true_backup_restore_backup_details_title),
+            )
         }
     }
 

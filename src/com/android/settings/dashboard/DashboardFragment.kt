@@ -1,9 +1,9 @@
 package com.android.settings.dashboard
 
 import android.os.Bundle
-import androidx.preference.PreferenceFragmentCompat
+import com.android.settingslib.widget.SettingsBasePreferenceFragment
 
-open class DashboardFragment : PreferenceFragmentCompat() {
+open class DashboardFragment : SettingsBasePreferenceFragment() {
     open fun getMetricsCategory(): Int = 0
     open fun getPreferenceScreenResId(): Int = 0
     open fun getLogTag(): String = "DashboardFragment"
@@ -12,6 +12,14 @@ open class DashboardFragment : PreferenceFragmentCompat() {
         val resId = getPreferenceScreenResId()
         if (resId != 0) {
             setPreferencesFromResource(resId, rootKey)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val t = preferenceScreen?.title
+        if (t != null && t.isNotEmpty()) {
+            activity?.title = t
         }
     }
 }

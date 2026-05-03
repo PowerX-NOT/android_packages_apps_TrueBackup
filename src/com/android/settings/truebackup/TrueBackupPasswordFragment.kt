@@ -13,7 +13,7 @@ import android.os.VibratorManager
 import android.text.InputType
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import android.app.AlertDialog
 import androidx.preference.Preference
 import com.android.internal.logging.nano.MetricsProto
 import com.android.truebackup.R

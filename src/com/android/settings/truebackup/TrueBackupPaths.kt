@@ -4,12 +4,26 @@
 
 package com.android.settings.truebackup
 
+import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 
 object TrueBackupPaths {
     const val PACKAGE_RESTORE_CONFIG = "package_restore_config.json"
+
+    /** Prefer [ApplicationInfo.loadIcon] so launcher-style icons resolve like the Settings app. */
+    @JvmStatic
+    fun loadPackageIcon(context: Context, pm: PackageManager, packageName: String): Drawable {
+        return try {
+            val info = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+            info.loadIcon(pm)
+        } catch (_: PackageManager.NameNotFoundException) {
+            context.getDrawable(android.R.drawable.sym_def_app_icon)!!
+        }
+    }
 
     @JvmStatic
     fun readFully(f: File): ByteArray {

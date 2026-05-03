@@ -6,22 +6,25 @@ package com.android.settings.truebackup
 
 import android.content.Context
 import android.view.View
+import android.widget.ImageView
 import androidx.preference.PreferenceViewHolder
-import com.android.truebackup.R
 import com.android.settingslib.widget.SelectorWithWidgetPreference
+import com.android.truebackup.R
 
 /**
- * Checkbox selector row: tapping the main content is handled separately (e.g. app info / details);
- * tapping the widget area toggles selection (multi-select).
+ * Uses AOSP [SelectorWithWidgetPreference] layout (checkbox, icon, title, optional end affordance)
+ * like the Settings app. Selection toggles from the checkbox; navigation uses the extra widget.
  */
 class TrueBackupAppSelectorPreference(context: Context) :
     SelectorWithWidgetPreference(context, true) {
 
     var onContentClick: (() -> Unit)? = null
-
-    init {
-        setLayoutResource(R.layout.true_backup_preference_selector_row)
-    }
+        set(value) {
+            field = value
+            setExtraWidgetOnClickListener(
+                if (value != null) View.OnClickListener { value.invoke() } else null,
+            )
+        }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
@@ -32,35 +35,34 @@ class TrueBackupAppSelectorPreference(context: Context) :
             background = null
         }
 
-        val content = holder.findViewById(R.id.true_backup_row_content) as? View
         val widgetFrame = holder.findViewById(android.R.id.widget_frame)
 
         if (!isEnabled) {
-            content?.isClickable = false
-            content?.isFocusable = false
-            content?.setOnClickListener(null)
-            content?.background = null
             widgetFrame?.isClickable = false
             widgetFrame?.isFocusable = false
             widgetFrame?.setOnClickListener(null)
             widgetFrame?.background = null
+            disableExtraWidget(holder)
             return
         }
 
-        val contentAction = onContentClick
-        if (contentAction != null) {
-            content?.isClickable = true
-            content?.isFocusable = true
-            content?.setOnClickListener { contentAction() }
-        } else {
-            content?.isClickable = false
-            content?.isFocusable = false
-            content?.setOnClickListener(null)
-            content?.background = null
+        if (onContentClick != null) {
+            val extra = holder.findViewById(R.id.selector_extra_widget) as? ImageView
+            extra?.setImageResource(R.drawable.ic_chevron_right_24dp)
         }
 
         widgetFrame?.isClickable = true
         widgetFrame?.isFocusable = true
         widgetFrame?.setOnClickListener { onClick() }
+    }
+
+    private fun disableExtraWidget(holder: PreferenceViewHolder) {
+        val extra = holder.findViewById(R.id.selector_extra_widget) as? ImageView
+        val container = holder.findViewById(R.id.selector_extra_widget_container)
+        extra?.isClickable = false
+        extra?.isFocusable = false
+        extra?.setOnClickListener(null)
+        container?.isClickable = false
+        container?.isFocusable = false
     }
 }

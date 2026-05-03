@@ -220,11 +220,7 @@ class TrueBackupBackupAppListFragment : DashboardFragment() {
         } catch (e: Exception) {
             Log.w(LOG_TAG, "parse ${pkgDir.name}", e)
         }
-        val icon: Drawable = try {
-            pm.getApplicationIcon(pkg)
-        } catch (_: PackageManager.NameNotFoundException) {
-            ctx.getDrawable(android.R.drawable.sym_def_app_icon)!!
-        }
+        val icon: Drawable = TrueBackupPaths.loadPackageIcon(ctx, pm, pkg)
         val installed = isPackageInstalled(pm, pkg)
         return BackupRow(pkg, name, icon, installed, hasBackup = true)
     }
@@ -273,8 +269,12 @@ class TrueBackupBackupAppListFragment : DashboardFragment() {
                     } catch (_: PackageManager.NameNotFoundException) {
                     }
                 }
+                setExtraWidgetContentDescription(
+                    context.getString(R.string.true_backup_open_app_info),
+                )
             } else {
                 onContentClick = null
+                setExtraWidgetContentDescription(null)
             }
         }
     }

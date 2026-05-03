@@ -1,16 +1,15 @@
 package com.android.truebackup
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.android.settings.truebackup.TrueBackupRestoreBackupDetailsFragment
+import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity
 
-class SubSettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+class SubSettingsActivity : CollapsingToolbarBaseActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fragment_container)
         if (savedInstanceState != null) return
 
         val fragmentName = intent.getStringExtra(EXTRA_DESTINATION) ?: return finish()
@@ -19,7 +18,7 @@ class SubSettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPref
 
         val fragment = newSubSettingsFragment(fragmentName, args) ?: return finish()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
+            .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, fragment)
             .commit()
     }
 
@@ -27,7 +26,7 @@ class SubSettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPref
         val fragmentName = pref.fragment ?: return false
         val fragment = newSubSettingsFragment(fragmentName, pref.extras) ?: return false
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
+            .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, fragment)
             .addToBackStack(fragmentName)
             .commit()
         return true

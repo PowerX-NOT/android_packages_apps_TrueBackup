@@ -11,7 +11,7 @@ import android.os.RemoteException
 import android.text.format.DateUtils
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import android.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
