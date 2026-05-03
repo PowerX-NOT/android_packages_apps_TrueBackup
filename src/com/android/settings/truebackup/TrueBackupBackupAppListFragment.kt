@@ -5,6 +5,7 @@
 package com.android.settings.truebackup
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -169,7 +170,7 @@ class TrueBackupBackupAppListFragment : DashboardFragment() {
 
     private fun computeRows(pm: PackageManager, ctx: Context): List<BackupRow> {
         val backupPath = TrueBackupPreferences.getBackupPath(ctx)
-        val apps = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+        val apps = queryVisibleUserApps(pm)
         val byPkg = linkedMapOf<String, BackupRow>()
         for (info in apps) {
             if (info.flags and ApplicationInfo.FLAG_SYSTEM != 0) continue
@@ -199,6 +200,23 @@ class TrueBackupBackupAppListFragment : DashboardFragment() {
             }
         }
         return byPkg.values.sortedBy { it.label.lowercase() }
+    }
+
+    private fun queryVisibleUserApps(pm: PackageManager): List<ApplicationInfo> {
+        val direct = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+        if (direct.isNotEmpty()) return direct
+
+        // Fallback for package-visibility-restricted builds: use launcher-visible apps.
+        val out = linkedMapOf<String, ApplicationInfo>()
+        val launcherIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+        pm.queryIntentActivities(launcherIntent, 0).forEach { ri ->
+            val pkg = ri.activityInfo?.packageName ?: return@forEach
+            try {
+                out[pkg] = pm.getApplicationInfo(pkg, PackageManager.GET_META_DATA)
+            } catch (_: PackageManager.NameNotFoundException) {
+            }
+        }
+        return out.values.toList()
     }
 
     private fun loadRowFromBackup(ctx: Context, pm: PackageManager, pkgDir: File): BackupRow? {
