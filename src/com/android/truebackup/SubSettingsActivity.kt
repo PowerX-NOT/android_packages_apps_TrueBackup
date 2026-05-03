@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.android.settings.truebackup.TrueBackupRestoreBackupDetailsFragment
 
 class SubSettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +17,7 @@ class SubSettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPref
         val args = intent.getBundleExtra(EXTRA_ARGS)
         title = intent.getStringExtra(EXTRA_TITLE) ?: title
 
-        val fragment = Fragment.instantiate(this, fragmentName, args)
+        val fragment = newSubSettingsFragment(fragmentName, args) ?: return finish()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
@@ -24,12 +25,20 @@ class SubSettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPref
 
     override fun onPreferenceStartFragment(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
         val fragmentName = pref.fragment ?: return false
-        val fragment = Fragment.instantiate(this, fragmentName, pref.extras)
+        val fragment = newSubSettingsFragment(fragmentName, pref.extras) ?: return false
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(fragmentName)
             .commit()
         return true
+    }
+
+    private fun newSubSettingsFragment(className: String?, args: Bundle?): Fragment? {
+        return when (className) {
+            TrueBackupRestoreBackupDetailsFragment::class.java.name ->
+                TrueBackupRestoreBackupDetailsFragment().apply { arguments = args }
+            else -> null
+        }
     }
 
     companion object {
