@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/true_backup_restore_start"
+        android:title="@string/true_backup_action_restore_selected"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/true_backup_restore_delete_selected"
+        android:title="@string/true_backup_delete_selected_backups"
+        app:showAsAction="never" />
+</menu>
