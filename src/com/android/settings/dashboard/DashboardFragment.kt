@@ -8,9 +8,6 @@ open class DashboardFragment : PreferenceFragmentCompat() {
     open fun getPreferenceScreenResId(): Int = 0
     open fun getLogTag(): String = "DashboardFragment"
 
-    val metricsCategory: Int
-        get() = getMetricsCategory()
-
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         val resId = getPreferenceScreenResId()
         if (resId != 0) {

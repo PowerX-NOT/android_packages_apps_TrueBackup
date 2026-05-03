@@ -509,7 +509,7 @@ class TrueBackupRestoreAppListFragment : DashboardFragment() {
                 SubSettingLauncher(requireContext())
                     .setDestination(TrueBackupRestoreBackupDetailsFragment::class.java.name)
                     .setTitleText(row.label)
-                    .setSourceMetricsCategory(metricsCategory)
+                    .setSourceMetricsCategory(getMetricsCategory())
                     .setArguments(
                         Bundle().apply {
                             putString(TrueBackupRestoreBackupDetailsFragment.ARG_PACKAGE_NAME, row.packageName)

@@ -204,7 +204,7 @@ class TrueBackupRestoreBackupDetailsFragment : DashboardFragment() {
                             AppInfoDashboardFragment::class.java,
                             appInfo,
                             ctx,
-                            metricsCategory,
+                            getMetricsCategory(),
                         )
                     } catch (_: PackageManager.NameNotFoundException) {
                     }
