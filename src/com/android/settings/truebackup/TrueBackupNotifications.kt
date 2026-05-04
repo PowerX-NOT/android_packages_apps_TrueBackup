@@ -81,7 +81,7 @@ object TrueBackupNotifications {
             }
         }
         val n = newBuilder(context)
-            .setSmallIcon(R.drawable.ic_settings_backup)
+            .setSmallIcon(R.drawable.ic_truebackup_notification)
             .setContentTitle(title)
             .setContentText(textWithProgress)
             .setProgress(100, safeProgress, false)
@@ -100,7 +100,7 @@ object TrueBackupNotifications {
         nm.notify(
             NOTIF_REKEY_DONE,
             newBuilder(context)
-                .setSmallIcon(R.drawable.ic_settings_backup)
+                .setSmallIcon(R.drawable.ic_truebackup_notification)
                 .setContentTitle(context.getString(R.string.true_backup_notif_rekey_done_title))
                 .setContentText(context.getString(R.string.true_backup_notif_rekey_done_text))
                 .setProgress(0, 0, false)
@@ -122,7 +122,7 @@ object TrueBackupNotifications {
         nm.notify(
             NOTIF_ALL_COMPLETE,
             newBuilder(context)
-                .setSmallIcon(R.drawable.ic_settings_backup)
+                .setSmallIcon(R.drawable.ic_truebackup_notification)
                 .setContentTitle(context.getString(R.string.true_backup_notif_all_ops_complete_title))
                 .setContentText(context.getString(R.string.true_backup_notif_all_ops_complete_text))
                 .setProgress(0, 0, false)
