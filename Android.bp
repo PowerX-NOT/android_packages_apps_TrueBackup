@@ -8,6 +8,9 @@ android_app {
     certificate: "platform",
     system_ext_specific: true,
     privileged: true,
+    required: [
+        "default-permissions_com.android.truebackup",
+    ],
     srcs: [
         "src/**/*.kt",
         "src/**/*.java",
@@ -25,4 +28,12 @@ android_app {
         "kotlinx_coroutines_android",
         "kotlinx_coroutines",
     ],
+}
+
+prebuilt_etc {
+    name: "default-permissions_com.android.truebackup",
+    system_ext_specific: true,
+    sub_dir: "default-permissions",
+    src: "default-permissions_com.android.truebackup.xml",
+    filename_from_src: true,
 }
