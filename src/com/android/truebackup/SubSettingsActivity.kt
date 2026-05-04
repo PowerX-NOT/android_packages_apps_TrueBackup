@@ -4,6 +4,10 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.android.settings.core.SubSettingLauncher
+import com.android.settings.truebackup.TrueBackupBackupAppListFragment
+import com.android.settings.truebackup.TrueBackupPasswordFragment
+import com.android.settings.truebackup.TrueBackupRestoreAppListFragment
 import com.android.settings.truebackup.TrueBackupRestoreBackupDetailsFragment
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity
 
@@ -23,17 +27,23 @@ class SubSettingsActivity : CollapsingToolbarBaseActivity(), PreferenceFragmentC
     }
 
     override fun onPreferenceStartFragment(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
-        val fragmentName = pref.fragment ?: return false
-        val fragment = newSubSettingsFragment(fragmentName, pref.extras) ?: return false
-        supportFragmentManager.beginTransaction()
-            .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, fragment)
-            .addToBackStack(fragmentName)
-            .commit()
+        val destination = pref.fragment ?: return false
+        SubSettingLauncher(this)
+            .setDestination(destination)
+            .setTitleText(pref.title ?: "")
+            .setArguments(pref.extras ?: Bundle())
+            .launch()
         return true
     }
 
     private fun newSubSettingsFragment(className: String?, args: Bundle?): Fragment? {
         return when (className) {
+            TrueBackupPasswordFragment::class.java.name ->
+                TrueBackupPasswordFragment().apply { arguments = args }
+            TrueBackupBackupAppListFragment::class.java.name ->
+                TrueBackupBackupAppListFragment().apply { arguments = args }
+            TrueBackupRestoreAppListFragment::class.java.name ->
+                TrueBackupRestoreAppListFragment().apply { arguments = args }
             TrueBackupRestoreBackupDetailsFragment::class.java.name ->
                 TrueBackupRestoreBackupDetailsFragment().apply { arguments = args }
             else -> null
