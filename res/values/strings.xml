@@ -3,6 +3,8 @@
     <string name="delete">Delete</string>
     <string name="true_backup_title">TrueBackup</string>
     <string name="true_backup_summary">Back up app APK and data to storage you choose</string>
+    <string name="true_backup_category_storage">Storage &amp; security</string>
+    <string name="true_backup_category_apps">Apps</string>
     <string name="true_backup_location_title">Backup location</string>
     <string name="true_backup_location_summary">Choose where backups are stored</string>
     <string name="true_backup_location_not_set">Not set — tap to choose a folder</string>

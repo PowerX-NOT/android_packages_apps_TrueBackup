@@ -2,27 +2,42 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/true_backup_title">
 
-    <Preference
-        android:key="true_backup_location"
-        android:title="@string/true_backup_location_title"
-        android:summary="@string/true_backup_location_summary" />
+    <com.android.settingslib.widget.LayoutPreference
+        android:key="true_backup_hero"
+        android:layout="@layout/true_backup_home_hero"
+        android:selectable="false" />
 
-    <Preference
-        android:key="true_backup_password"
-        android:title="@string/true_backup_password_title"
-        android:summary="@string/true_backup_password_summary"
-        android:fragment="com.android.settings.truebackup.TrueBackupPasswordFragment" />
+    <PreferenceCategory
+        android:key="true_backup_cat_storage"
+        android:title="@string/true_backup_category_storage">
 
-    <Preference
-        android:key="true_backup_backup_apps"
-        android:title="@string/true_backup_backup_apps_title"
-        android:summary="@string/true_backup_backup_apps_summary"
-        android:fragment="com.android.settings.truebackup.TrueBackupBackupAppListFragment" />
+        <Preference
+            android:key="true_backup_location"
+            android:title="@string/true_backup_location_title"
+            android:summary="@string/true_backup_location_summary" />
 
-    <Preference
-        android:key="true_backup_restore_apps"
-        android:title="@string/true_backup_restore_apps_title"
-        android:summary="@string/true_backup_restore_apps_summary"
-        android:fragment="com.android.settings.truebackup.TrueBackupRestoreAppListFragment" />
+        <Preference
+            android:key="true_backup_password"
+            android:title="@string/true_backup_password_title"
+            android:summary="@string/true_backup_password_summary"
+            android:fragment="com.android.settings.truebackup.TrueBackupPasswordFragment" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="true_backup_cat_apps"
+        android:title="@string/true_backup_category_apps">
+
+        <Preference
+            android:key="true_backup_backup_apps"
+            android:title="@string/true_backup_backup_apps_title"
+            android:summary="@string/true_backup_backup_apps_summary"
+            android:fragment="com.android.settings.truebackup.TrueBackupBackupAppListFragment" />
+
+        <Preference
+            android:key="true_backup_restore_apps"
+            android:title="@string/true_backup_restore_apps_title"
+            android:summary="@string/true_backup_restore_apps_summary"
+            android:fragment="com.android.settings.truebackup.TrueBackupRestoreAppListFragment" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
