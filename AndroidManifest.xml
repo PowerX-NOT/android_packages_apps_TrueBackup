@@ -19,15 +19,31 @@
             android:exported="true"
             android:label="@string/true_backup_title">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="com.android.settings.action.IA_SETTINGS" />
             </intent-filter>
+            <meta-data
+                android:name="com.android.settings.category"
+                android:value="com.android.settings.category.ia.apps" />
+            <meta-data
+                android:name="com.android.settings.summary"
+                android:resource="@string/true_backup_summary" />
         </activity>
 
         <activity
             android:name=".SubSettingsActivity"
             android:exported="false"
             android:label="@string/true_backup_title" />
+
+        <provider
+            android:name=".SettingsSearchIndexablesProvider"
+            android:authorities="com.android.truebackup"
+            android:multiprocess="false"
+            android:grantUriPermissions="true"
+            android:permission="android.permission.READ_SEARCH_INDEXABLES"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.content.action.SEARCH_INDEXABLES_PROVIDER" />
+            </intent-filter>
+        </provider>
     </application>
 </manifest>
