@@ -19,20 +19,21 @@ class TrueBackupAppSelectorPreference(context: Context) :
     SelectorWithWidgetPreference(context, true) {
 
     var onContentClick: (() -> Unit)? = null
-        set(value) {
-            field = value
-            setExtraWidgetOnClickListener(
-                if (value != null) View.OnClickListener { value.invoke() } else null,
-            )
-        }
+        set(value) { field = value }
+
+    init {
+        // Use a custom row where the checkbox widget is on the right end.
+        layoutResource = R.layout.true_backup_preference_app_selector_row
+        // We navigate from row tap now; no separate right-side arrow target.
+        setExtraWidgetOnClickListener(null)
+    }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         holder.itemView.apply {
-            isClickable = false
-            isFocusable = false
-            setOnClickListener(null)
-            background = null
+            isClickable = onContentClick != null && isEnabled
+            isFocusable = isClickable
+            setOnClickListener(if (isClickable) View.OnClickListener { onContentClick?.invoke() } else null)
         }
 
         val widgetFrame = holder.findViewById(android.R.id.widget_frame)
@@ -44,11 +45,6 @@ class TrueBackupAppSelectorPreference(context: Context) :
             widgetFrame?.background = null
             disableExtraWidget(holder)
             return
-        }
-
-        if (onContentClick != null) {
-            val extra = holder.findViewById(R.id.selector_extra_widget) as? ImageView
-            extra?.setImageResource(R.drawable.ic_chevron_right_24dp)
         }
 
         widgetFrame?.isClickable = true
