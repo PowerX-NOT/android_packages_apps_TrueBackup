@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.RemoteException
+import android.os.UserHandle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -130,9 +131,13 @@ class TrueBackupBackupAppListFragment : DashboardFragment() {
             var startedAny = false
             for (pkg in toQueue) {
                 try {
-                    val info = pm.getApplicationInfo(pkg, 0)
+                    val info = pm.getApplicationInfoAsUser(
+                        pkg,
+                        PackageManager.GET_META_DATA,
+                        UserHandle.myUserId(),
+                    )
                     if ((info.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
-                    svc.backupPackage(pkg, path)
+                    svc.backupPackage(pkg, path, UserHandle.myUserId())
                     startedAny = true
                     val label = info.loadLabel(pm).toString()
                     withContext(Dispatchers.Main) {
@@ -203,16 +208,24 @@ class TrueBackupBackupAppListFragment : DashboardFragment() {
     }
 
     private fun queryVisibleUserApps(pm: PackageManager): List<ApplicationInfo> {
-        val direct = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+        val userId = UserHandle.myUserId()
+        val direct = pm.getInstalledApplicationsAsUser(
+            PackageManager.GET_META_DATA,
+            userId,
+        )
         if (direct.isNotEmpty()) return direct
 
         // Fallback for package-visibility-restricted builds: use launcher-visible apps.
         val out = linkedMapOf<String, ApplicationInfo>()
         val launcherIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
-        pm.queryIntentActivities(launcherIntent, 0).forEach { ri ->
+        pm.queryIntentActivitiesAsUser(launcherIntent, 0, userId).forEach { ri ->
             val pkg = ri.activityInfo?.packageName ?: return@forEach
             try {
-                out[pkg] = pm.getApplicationInfo(pkg, PackageManager.GET_META_DATA)
+                out[pkg] = pm.getApplicationInfoAsUser(
+                    pkg,
+                    PackageManager.GET_META_DATA,
+                    UserHandle.of(userId),
+                )
             } catch (_: PackageManager.NameNotFoundException) {
             }
         }
@@ -245,7 +258,7 @@ class TrueBackupBackupAppListFragment : DashboardFragment() {
 
     private fun isPackageInstalled(pm: PackageManager, packageName: String): Boolean {
         return try {
-            pm.getPackageInfo(packageName, 0)
+            pm.getPackageInfoAsUser(packageName, 0, UserHandle.myUserId())
             true
         } catch (_: PackageManager.NameNotFoundException) {
             false
@@ -274,9 +287,10 @@ class TrueBackupBackupAppListFragment : DashboardFragment() {
             if (row.installed) {
                 onContentClick = {
                     try {
-                        val appInfo = requireContext().packageManager.getApplicationInfo(
+                        val appInfo = requireContext().packageManager.getApplicationInfoAsUser(
                             row.packageName,
                             PackageManager.GET_META_DATA,
+                            UserHandle.myUserId(),
                         )
                         AppInfoDashboardFragment.startAppInfoFragment(
                             AppInfoDashboardFragment::class.java,

@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.RemoteException
+import android.os.UserHandle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -332,7 +333,8 @@ class TrueBackupRestoreAppListFragment : DashboardFragment() {
             var startedAny = false
             for (pkg in pkgs) {
                 try {
-                    svc.restorePackage(pkg, path)
+                    // -1: restore into profile recorded in backup metadata (clone/work profile aware).
+                    svc.restorePackage(pkg, path, -1)
                     startedAny = true
                     val label = labelsByPkg[pkg].orEmpty()
                     withContext(Dispatchers.Main) {
@@ -471,7 +473,7 @@ class TrueBackupRestoreAppListFragment : DashboardFragment() {
 
     private fun isPackageInstalled(pm: PackageManager, packageName: String): Boolean {
         return try {
-            pm.getPackageInfo(packageName, 0)
+            pm.getPackageInfoAsUser(packageName, 0, UserHandle.myUserId())
             true
         } catch (_: PackageManager.NameNotFoundException) {
             false
