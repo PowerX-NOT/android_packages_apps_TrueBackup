@@ -85,6 +85,7 @@
     <string name="true_backup_part_media">Media</string>
     <string name="true_backup_category_info">Info</string>
     <string name="true_backup_info_uid">UID</string>
+    <string name="true_backup_info_backup_user">Backed-up profile (user ID)</string>
     <string name="true_backup_info_version">Version</string>
     <string name="true_backup_info_first_installed">First installed</string>
     <string name="true_backup_info_last_update">Last update</string>

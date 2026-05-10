@@ -7,6 +7,7 @@ package com.android.settings.truebackup
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.os.UserHandle
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -16,9 +17,19 @@ object TrueBackupPaths {
 
     /** Prefer [ApplicationInfo.loadIcon] so launcher-style icons resolve like the Settings app. */
     @JvmStatic
-    fun loadPackageIcon(context: Context, pm: PackageManager, packageName: String): Drawable {
+    @JvmOverloads
+    fun loadPackageIcon(
+        context: Context,
+        pm: PackageManager,
+        packageName: String,
+        userId: Int = UserHandle.myUserId(),
+    ): Drawable {
         return try {
-            val info = pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+            val info = pm.getApplicationInfoAsUser(
+                packageName,
+                PackageManager.GET_META_DATA,
+                UserHandle.of(userId),
+            )
             info.loadIcon(pm)
         } catch (_: PackageManager.NameNotFoundException) {
             context.getDrawable(android.R.drawable.sym_def_app_icon)!!

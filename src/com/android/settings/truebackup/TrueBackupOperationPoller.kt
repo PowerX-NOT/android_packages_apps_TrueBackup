@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.os.RemoteException
+import android.os.UserHandle
 import android.os.SystemClock
 import android.util.Log
 
@@ -279,7 +280,10 @@ object TrueBackupOperationPoller {
         if (packageName.isNullOrEmpty()) return ""
         return try {
             val pm = context.packageManager
-            pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0)).toString()
+            val uid = UserHandle.myUserId()
+            pm.getApplicationLabel(
+                pm.getApplicationInfoAsUser(packageName, 0, UserHandle.of(uid)),
+            ).toString()
         } catch (_: PackageManager.NameNotFoundException) {
             ""
         }

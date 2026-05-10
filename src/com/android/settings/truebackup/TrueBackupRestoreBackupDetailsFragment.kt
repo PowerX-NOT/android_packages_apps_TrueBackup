@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.RemoteException
+import android.os.UserHandle
 import android.text.format.DateUtils
 import android.util.Log
 import android.widget.Toast
@@ -174,8 +175,17 @@ class TrueBackupRestoreBackupDetailsFragment : DashboardFragment() {
             if (label != null) appLabel = label
         }
 
+        val backupConfig = root.optJSONObject("backupConfig")
+        val backupUserId = backupConfig?.optInt("userId", UserHandle.myUserId())
+            ?: UserHandle.myUserId()
+
         val icon = try {
-            ctx.packageManager.getApplicationIcon(packageName)
+            val ai = ctx.packageManager.getApplicationInfoAsUser(
+                packageName,
+                PackageManager.GET_META_DATA,
+                UserHandle.of(backupUserId),
+            )
+            ai.loadIcon(ctx.packageManager)
         } catch (_: PackageManager.NameNotFoundException) {
             ctx.getDrawable(android.R.drawable.sym_def_app_icon)
         }
@@ -189,16 +199,17 @@ class TrueBackupRestoreBackupDetailsFragment : DashboardFragment() {
         }
         screen.addPreference(header)
 
-        val installed = isPackageInstalled(ctx.packageManager, packageName)
+        val installed = isPackageInstalledAsUser(ctx.packageManager, packageName, backupUserId)
         if (installed) {
             val openInfo = Preference(ctx).apply {
                 key = "open_app_info"
                 setTitle(R.string.true_backup_open_app_info)
                 setOnPreferenceClickListener {
                     try {
-                        val appInfo = ctx.packageManager.getApplicationInfo(
+                        val appInfo = ctx.packageManager.getApplicationInfoAsUser(
                             packageName,
                             PackageManager.GET_META_DATA,
+                            UserHandle.of(backupUserId),
                         )
                         AppInfoDashboardFragment.startAppInfoFragment(
                             AppInfoDashboardFragment::class.java,
@@ -234,7 +245,6 @@ class TrueBackupRestoreBackupDetailsFragment : DashboardFragment() {
         val dataStates = root.optJSONObject("dataStates")
         val dataStats = root.optJSONObject("dataStats")
         val security = root.optJSONObject("security")
-        val backupConfig = root.optJSONObject("backupConfig")
 
         val metaCat = PreferenceCategory(ctx).apply {
             key = "meta_cat"
@@ -311,6 +321,14 @@ class TrueBackupRestoreBackupDetailsFragment : DashboardFragment() {
                 "info_uid",
                 R.string.true_backup_info_uid,
                 if (uid >= 0) uid.toString() else ctx.getString(R.string.true_backup_value_unknown),
+            ),
+        )
+        infoCat.addPreference(
+            prefLine(
+                ctx,
+                "info_backup_user",
+                R.string.true_backup_info_backup_user,
+                backupUserId.toString(),
             ),
         )
 
@@ -552,9 +570,9 @@ private fun PreferenceScreen.removeAllPreferences() {
     }
 }
 
-private fun isPackageInstalled(pm: PackageManager, packageName: String): Boolean {
+private fun isPackageInstalledAsUser(pm: PackageManager, packageName: String, userId: Int): Boolean {
     return try {
-        pm.getPackageInfo(packageName, 0)
+        pm.getPackageInfoAsUser(packageName, 0, userId)
         true
     } catch (_: PackageManager.NameNotFoundException) {
         false
